@@ -53,3 +53,9 @@ Lignes valides et prêtes pour STAGING.
 - **Sortie** : 39 130 564 lignes conformes
 - **Taux de rétention** : 87.65%
 - **Perte acceptée** : 12.35% (données non valides)
+
+## Anomalie supplémentaire détectée post-staging
+
+Février et mars 2025 : 2 lignes chacun avec des durées aberrantes
+(ex: 82 minutes pour 2,45 km). Supprimées de STAGING.
+Volume final STG_TRIPS après nettoyage complet : à recalculer.
