@@ -37,22 +37,30 @@ Implémentées dans : `sql/07_create_staging_trips.sql`
 
 ## 4. Résultats après nettoyage
 
-| Étape | Volume | Évolution |
-|-------|--------|-----------|
-| Après nettoyage dates (01-03-2025) | 44 644 946 | - |
-| Après exclusion anomalies | 39 130 564 | -5 514 382 lignes |
-| Taux de conservation | 87.65% | Excellent |
-
-Lignes valides et prêtes pour STAGING.
-
----
+| Étape | Lignes |
+|-------|--------|
+| RAW brut chargé | 44 644 946 |
+| Suppression dates hors 2024-2025 | 44 644 895 |
+| STAGING après règles qualité | 38 448 594 |
+| Suppression résidus fév-mars 2025 | 38 448 590 |
 
 ## 5. Taux de rétention final
 
-- **Entrée** : 44 644 946 lignes (nettoyées de dates aberrantes)
-- **Sortie** : 39 130 564 lignes conformes
-- **Taux de rétention** : 87.65%
-- **Perte acceptée** : 12.35% (données non valides)
+**86,1%** de rétention — 6,2M lignes exclues.
+Données propres couvrant 13 mois : jan 2024 → jan 2025.
+
+## 6. Chiffres clés
+
+| KPI | Valeur |
+|-----|--------|
+| Total courses | 38 448 590 |
+| Mois record | Octobre 2024 (3,3M courses) |
+| Revenu total 2024 | ~1,03 milliard $ |
+| Tarif moyen | ~19-20$ |
+| Total moyen | ~27-30$ |
+| % paiement carte | 83,95% |
+| Zone la plus active | JFK Airport (1,99M courses) |
+| Heure de pointe | 18h (2,76M courses) |
 
 ## Anomalie supplémentaire détectée post-staging
 
