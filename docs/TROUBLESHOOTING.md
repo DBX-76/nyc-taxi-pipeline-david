@@ -37,3 +37,21 @@ pour éviter les doublons.
 **Solution**  
 Ajouter `FORCE = TRUE` pour forcer le rechargement.
 Toujours faire un `TRUNCATE TABLE` avant pour éviter les doublons.
+
+## Problème 3 — Dates hors plage 2024-2025
+
+**Symptôme**  
+date_min = 2002-12-31, date_max = 2026-06-26 après chargement.
+
+**Cause**  
+51 lignes avec timestamps corrompus dans les fichiers source TLC.
+
+**Solution**  
+```sql
+DELETE FROM RAW.YELLOW_TRIPS 
+WHERE tpep_pickup_datetime > '2025-12-31';
+```
+
+**Résultat**  
+51 lignes supprimées sur 44 644 946 — taux de rétention : 99.9999%
+Données propres : 2024-01-01 → 2025-03-23
