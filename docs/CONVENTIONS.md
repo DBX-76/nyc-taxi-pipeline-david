@@ -14,6 +14,6 @@
 - Fichier `.env` toujours dans `.gitignore`
 
 ## Git
-- Commits en anglais, format Conventional Commits :
+- Commits avec format Conventional Commits :
   `feat:`, `fix:`, `docs:`, `chore:`
-- Une branche par sprint : `sprint/1-ingestion`, etc.
+
