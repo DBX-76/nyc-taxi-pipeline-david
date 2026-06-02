@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: stg_yellow_trips
+    description: "Vue nettoyée des trajets Yellow Taxi (Sprint 2)"
+    columns:
+      - name: VendorID
+        description: "Identifiant du vendeur"
+        tests:
+          - not_null
+      - name: tpep_pickup_datetime
+        description: "Date de prise en charge"
+        tests:
+          - not_null
+      - name: passenger_count
+        description: "Nombre de passagers"
+        tests:
+          - not_null

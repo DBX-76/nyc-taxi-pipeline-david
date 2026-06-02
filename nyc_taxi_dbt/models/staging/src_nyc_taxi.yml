@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: raw_nyc_taxi
+    database: NYC_TAXI
+    schema: RAW
+    description: "Données brutes TLC chargées depuis le Stage Snowflake"
+    tables:
+      - name: YELLOW_TRIPS
+        description: "Trajets Yellow Taxi 2024-2025"
+      - name: TAXI_ZONES
+        description: "Table de référence des zones de taxi (265 zones)"

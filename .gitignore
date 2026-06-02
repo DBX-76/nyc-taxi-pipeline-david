@@ -1,5 +1,22 @@
+# --- Secrets & Données lourdes 
 .env
 data/
+*.parquet
+
+# --- Environnement virtuel Python ---
+.venv/
+venv/
+env/
 __pycache__/
 *.pyc
-*.parquet
+
+# --- Fichiers générés par dbt 
+target/
+dbt_packages/
+logs/
+*.log
+
+# --- IDE et OS ---
+.vscode/
+.DS_Store
+Thumbs.db
