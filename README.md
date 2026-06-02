@@ -209,15 +209,16 @@ python ingestion/download_tlc.py
   - `09c_scd_type2_simulation.sql` — Démonstration SCD Type 2
 
 ### Sprint 3 [EN COURS] DBT Core (en cours)
+### Sprint 3 ⏳ DBT Core & Industrialisation (En cours)
 - [x] Installation de `dbt-core` (1.11.11) et `dbt-snowflake` (1.11.5)
 - [x] Création du rôle dédié `DBT_ROLE` dans Snowflake
 - [x] Configuration du `profiles.yml` et connexion à Snowflake Azure
 - [x] Test de connexion validé (`dbt debug` OK)
-- [x] Premier modèle staging `stg_yellow_trips` créé (vue nettoyée)
-- [x] Premier modèle mart `kpi_monthly` créé (table, 38.4M lignes agrégées)
+- [x] Modèle staging `stg_yellow_trips` créé (vue, 38.4M lignes nettoyées)
+- [x] 4 Modèles marts créés (tables dans PUBLIC_mart : monthly, hourly, zones, payment)
 - [x] Tests de qualité `not_null` validés (PASS=3)
-- [ ] Modèles marts supplémentaires (hourly, zones, payment)
-- [ ] Documentation automatique (`dbt docs generate`)
+- [x] Structure YAML moderne (1 fichier YAML par modèle)
+- [ ] Documentation visuelle automatique (`dbt docs generate`)
 - [ ] Snapshot SCD Type 2 dans dbt
 ---
 

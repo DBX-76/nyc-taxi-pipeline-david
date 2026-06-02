@@ -62,6 +62,23 @@ Données propres couvrant 13 mois : jan 2024 → jan 2025.
 | Zone la plus active | JFK Airport (1,99M courses) |
 | Heure de pointe | 18h (2,76M courses) |
 
+## 7. Historisation des dimensions (SCD Type 2)
+
+**Table concernée** : `NYC_TAXI.STAGING.DIM_LOCATION`
+
+**Fonctionnement** :
+- Clé surrogate `location_key` (auto-incrémentée)
+- Clé naturelle `location_id` (identifiant TLC)
+- Colonnes de validité : `valid_from`, `valid_to`, `is_current`
+- Enregistrement actif : `is_current = TRUE` et `valid_to IS NULL`
+
+**Simulation** :
+- Zone JFK Airport (location_id = 132) : `service_zone` passé de `Airports` → `Airports_V2`
+- Démonstration dans `sql/09c_scd_type2_simulation.sql`
+
+**Intérêt métier** :
+Permet de rejouer les analyses historiques avec la dimension telle qu'elle était à une date donnée (ex: KPIs par zone avant/après changement de borough).
+
 ## Anomalie supplémentaire détectée post-staging
 
 Février et mars 2025 : 2 lignes chacun avec des durées aberrantes
