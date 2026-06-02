@@ -55,3 +55,17 @@ WHERE tpep_pickup_datetime > '2025-12-31';
 **Résultat**  
 51 lignes supprimées sur 44 644 946 — taux de rétention : 99.9999%
 Données propres : 2024-01-01 → 2025-03-23
+
+## Problème 4 - Incompatibilité dbt avec Python 3.14
+
+**Symptôme** : 
+Erreur `mashumaro.exceptions.UnserializableField` lors de l'exécution de `dbt --version` ou `dbt debug`.
+
+**Cause** : 
+Python 3.14 est une version très récente (encore en phase de développement/bêta). Les dépendances internes de dbt (notamment `mashumaro` et `dbt_common`) ne sont pas encore compatibles avec cette version.
+
+**Solution** : 
+1. Installer la dernière version stable supportée (Python 3.12).
+2. Supprimer l'ancien environnement virtuel : `Remove-Item -Recurse -Force .venv`
+3. Recréer l'environnement avec Python 3.12 : `py -3.12 -m venv .venv`
+4. Réinstaller les dépendances.
