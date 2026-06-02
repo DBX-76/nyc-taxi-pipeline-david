@@ -227,6 +227,21 @@ nyc_taxi_dbt:
 
 **Note** : Le mot de passe est stocké dans une variable d'environnement pour des raisons de sécurité.
 
+## Documentation automatique & Data Lineage
+
+### Génération de la documentation
+
+dbt peut générer automatiquement un site web interactif qui documente :
+- Les sources de données
+- Les modèles (SQL, descriptions, colonnes)
+- Les tests de qualité
+- Les dépendances entre les modèles (DAG)
+
+**Commandes :**
+```bash
+dbt docs generate  # Génère les fichiers dans target/
+dbt docs serve     # Lance un serveur web local (http://localhost:8080)
+
 ## Intégration CI/CD (futur)
 
 Pipeline GitHub Actions prévu :

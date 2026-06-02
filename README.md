@@ -208,18 +208,17 @@ python ingestion/download_tlc.py
   - `09b_insert_dim_location.sql` — Population de la dimension
   - `09c_scd_type2_simulation.sql` — Démonstration SCD Type 2
 
-### Sprint 3 [EN COURS] DBT Core (en cours)
-### Sprint 3 ⏳ DBT Core & Industrialisation (En cours)
-- [x] Installation de `dbt-core` (1.11.11) et `dbt-snowflake` (1.11.5)
-- [x] Création du rôle dédié `DBT_ROLE` dans Snowflake
-- [x] Configuration du `profiles.yml` et connexion à Snowflake Azure
-- [x] Test de connexion validé (`dbt debug` OK)
-- [x] Modèle staging `stg_yellow_trips` créé (vue, 38.4M lignes nettoyées)
-- [x] 4 Modèles marts créés (tables dans PUBLIC_mart : monthly, hourly, zones, payment)
-- [x] Tests de qualité `not_null` validés (PASS=3)
-- [x] Structure YAML moderne (1 fichier YAML par modèle)
-- [ ] Documentation visuelle automatique (`dbt docs generate`)
-- [ ] Snapshot SCD Type 2 dans dbt
+### Sprint 3 DBT Core 
+- Installation de `dbt-core` (1.11.11) et `dbt-snowflake` (1.11.5)
+- Création du rôle dédié `DBT_ROLE` dans Snowflake
+- Configuration du `profiles.yml` et connexion à Snowflake Azure
+- Test de connexion validé (`dbt debug` OK)
+- Modèle staging `stg_yellow_trips` créé (vue, 38.4M lignes nettoyées)
+- 4 Modèles marts créés (tables dans PUBLIC_mart : monthly, hourly, zones, payment)
+- Tests de qualité `not_null` validés (PASS=3)
+- Structure YAML modernisée (1 fichier YAML par modèle)
+- Documentation automatique générée (`dbt docs generate`)
+- Data Lineage visualisé via `dbt docs serve`
 ---
 
 ## Vérification du succès

@@ -22,6 +22,8 @@
 ### Structure des modèles
 - `models/staging/` : vues de nettoyage (materialized='view')
 - `models/marts/` : tables d'agrégats métier (materialized='table')
+- Un fichier YAML par modèle pour les tests et la documentation
+- Noms descriptifs : `stg_yellow_trips.yml` (pas `schema.yml`)
 
 ### Bonnes pratiques
 - Utiliser `{{ source('nom_source', 'nom_table') }}` pour les tables RAW
@@ -35,4 +37,5 @@ dbt run          # Exécute tous les modèles
 dbt test         # Lance les tests de qualité
 dbt docs generate # Génère la documentation
 dbt docs serve   # Sert la documentation localement
+
 
