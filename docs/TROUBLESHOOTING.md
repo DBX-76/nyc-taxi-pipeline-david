@@ -84,3 +84,8 @@ Python 3.14 est une version très récente (encore en phase de développement/b�
 **Symptôme** : La commande `dbt source freshness` échoue avec l'erreur `invalid identifier 'TPEP_PICKUP_DATETIME'`.
 **Cause** : Les règles de `freshness` et `loaded_at_field` avaient été définies au niveau de la source globale (`raw_nyc_taxi`). dbt a donc tenté de chercher la colonne `tpep_pickup_datetime` dans TOUTES les tables de la source, y compris `TAXI_ZONES` qui est une table de référence statique.
 **Solution** : Retirer les règles du niveau "source" et les appliquer uniquement au niveau de la table dynamique `YELLOW_TRIPS` dans le fichier `src_nyc_taxi.yml`. Les tables statiques (lookup) ne doivent jamais avoir de contrôle de fraîcheur.
+
+## Problème 8- Erreur de connexion Snowflake depuis Streamlit
+**Symptôme** : `Failed to connect to DB: Incorrect username or password was specified`
+**Cause** : Le mot de passe était en dur dans le code ou les variables d'environnement n'étaient pas chargées.
+**Solution** : Utiliser `python-dotenv` pour charger le fichier `.env` depuis la racine du projet. Ne jamais mettre de credentials en dur dans le code.

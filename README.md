@@ -232,6 +232,14 @@ python ingestion/download_tlc.py
 - Gestion fine des tables statiques vs dynamiques dans les tests de fraîcheur
 - Détection des requêtes lentes et estimation du stockage
 
+### Sprint 6 Dashboard de visualisation Streamlit
+- Installation de Streamlit et des dépendances (pandas, plotly)
+- Connexion sécurisée à Snowflake via variables d'environnement (.env)
+- Dashboard interactif avec 4 KPIs principaux
+- Visualisations : évolution mensuelle, répartition horaire, top zones, types de paiement
+- Système de cache intelligent (TTL 1h) pour optimiser les performances
+- Architecture modulaire (fichiers séparés pour config et app)
+
 ---
 
 ## Vérification du succès
