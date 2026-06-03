@@ -241,6 +241,12 @@ python ingestion/download_tlc.py
 - Sécurité : credentials via variables d'environnement (.env)
 - UI épurée : focus sur la donnée, pas de filtres inutiles
 
+### Sprint 7 Monitoring avancé avec Grafana 
+- Configuration Docker pour Grafana local (archive - plugin Snowflake devenu payant)
+- Migration vers Grafana Cloud (essai Enterprise 14 jours)
+- Dashboard de monitoring avec 4 panneaux : fraîcheur, volume, performance, stockage
+- Détection automatique de la fraîcheur (437 jours sans nouvelles données)
+- Export JSON du dashboard pour Infrastructure as Code
 ---
 
 ## Vérification du succès
@@ -311,14 +317,61 @@ pip install snowflake-connector-python
 
 ---
 
-## Prochaines étapes
+# Monitoring - NYC Taxi Pipeline
 
-1. **Remplir la Phase 2** - Créer les scripts SQL de transformation
-2. **Ajouter des tests** - Validation des données
-3. **Documentation complète** - Créer `docs/ARCHITECTURE.md`
-4. **Monitoring** - Logs et alertes
+## Contexte
+
+Ce dossier contient la configuration pour le monitoring du pipeline NYC Taxi.
+
+## Évolution technique
+
+### Phase 1 : Grafana Local avec Docker (Abandonné)
+- **Objectif** : Déployer Grafana en local via Docker Compose
+- **Fichiers** : `docker-compose.yml`
+- **Problème rencontré** : Le plugin officiel Snowflake (`grafana-snowflake-datasource`) est passé en licence Enterprise (payante) en 2024
+- **Décision** : Migration vers Grafana Cloud pour bénéficier de l'essai gratuit Enterprise (14 jours)
+
+### Phase 2 : Grafana Cloud (En cours)
+- **Objectif** : Utiliser Grafana Cloud pour le monitoring
+- **Avantages** :
+  - Accès à tous les plugins Enterprise (gratuit 14 jours)
+  - Lien partageable pour le jury
+  - Pas besoin de Docker sur la machine
+- **Dashboards** : Exportés en JSON et commités dans ce dossier (à venir)
+
+## Fichiers
+
+- `docker-compose.yml` : Configuration Docker pour Grafana local (archive)
+- `dashboards/` : Dashboards Grafana exportés en JSON (à venir)
+
+## Comment revenir à Docker ?
+
+Si Grafana Cloud n'est plus disponible ou si tu veux une solution 100% locale :
+
+```bash
+cd monitoring
+docker compose up -d
+# Accéder à http://localhost:3001
 
 ---
+## Dashboard de Monitoring
+
+### Fichier JSON
+- **Emplacement** : `dashboards/nyc_taxi_monitoring.json`
+- **Source** : Exporté depuis Grafana Cloud
+- **Format** : `apiVersion: dashboard.grafana.app/v2`
+
+### Panneaux configurés
+1. **Fraîcheur** : Jours depuis la dernière donnée (437 jours - alerte rouge)
+2. **Volume** : Total lignes STAGING (38,448,590)
+3. **Performance** : Courses par heure (pic à 18h)
+4. **Stockage** : Taille des tables par schéma
+
+### Importer ce dashboard
+1. Dans Grafana (Cloud ou local), aller dans **Dashboards → Import**
+2. Uploader `nyc_taxi_monitoring.json`
+3. Sélectionner la Data Source Snowflake
+4. Le dashboard est prêt !
 
 ## Support
 
