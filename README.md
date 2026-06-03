@@ -233,12 +233,13 @@ python ingestion/download_tlc.py
 - Détection des requêtes lentes et estimation du stockage
 
 ### Sprint 6 Dashboard de visualisation Streamlit
-- Installation de Streamlit et des dépendances (pandas, plotly)
-- Connexion sécurisée à Snowflake via variables d'environnement (.env)
-- Dashboard interactif avec 4 KPIs principaux
-- Visualisations : évolution mensuelle, répartition horaire, top zones, types de paiement
-- Système de cache intelligent (TTL 1h) pour optimiser les performances
-- Architecture modulaire (fichiers séparés pour config et app)
+- Dashboard interactif connecté à Snowflake en temps réel
+- 4 KPIs principaux : courses, revenus, distance, pourboires
+- 4 visualisations : évolution mensuelle, répartition horaire, top zones, paiements
+- Optimisation pushdown SQL : agrégations côté Snowflake (pas de transfert de 38M lignes)
+- Cache intelligent Streamlit (TTL 1h) pour performances optimales
+- Sécurité : credentials via variables d'environnement (.env)
+- UI épurée : focus sur la donnée, pas de filtres inutiles
 
 ---
 

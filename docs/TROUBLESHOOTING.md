@@ -89,3 +89,9 @@ Python 3.14 est une version très récente (encore en phase de développement/b�
 **Symptôme** : `Failed to connect to DB: Incorrect username or password was specified`
 **Cause** : Le mot de passe était en dur dans le code ou les variables d'environnement n'étaient pas chargées.
 **Solution** : Utiliser `python-dotenv` pour charger le fichier `.env` depuis la racine du projet. Ne jamais mettre de credentials en dur dans le code.
+
+## Problème 9 - Erreur de mémoire Pandas avec 38M de lignes
+**Symptôme** : `numpy._core._exceptions._ArrayMemoryError: Unable to allocate 2.86 GiB for an array with shape (10, 38448590)`
+**Cause** : Le dashboard chargeait toutes les lignes de la table `KPI_MONTHLY` (38.4M lignes) au lieu des données agrégées (~13 lignes).
+**Solution** : Déplacer les agrégations côté Snowflake (pushdown SQL) plutôt que de charger les données brutes en mémoire Python. Utiliser `GROUP BY` dans les requêtes SQL au lieu de `SELECT *`.
+
