@@ -20,7 +20,7 @@ Ce projet automatise l'ingestion complète des données Yellow Taxi du TLC (Taxi
 │                          TLC NYC Taxi Data Pipeline                         │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-SPRINT 1 [TERMINE] — INGESTION & ARCHITECTURE SNOWFLAKE
+SPRINT 1 — INGESTION & ARCHITECTURE SNOWFLAKE
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │
 │  TLC CDN (Parquet 2024-2025)
@@ -37,7 +37,7 @@ SPRINT 1 [TERMINE] — INGESTION & ARCHITECTURE SNOWFLAKE
 │
 └──────────────────────────────────────────────────────────────────────────────┘
 
-SPRINT 2 [TERMINE] — NETTOYAGE, QUALITÉ & TRANSFORMATIONS
+SPRINT 2 — NETTOYAGE, QUALITÉ & TRANSFORMATIONS
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │
 │  Analyse Qualité (06_data_quality_analysis.sql)
@@ -173,7 +173,7 @@ python ingestion/download_tlc.py
 
 ## État du projet
 
-### Sprint 1 [TERMINE] Ingestion & Architecture Snowflake
+### Sprint 1 Ingestion & Architecture Snowflake
 - **Architecture medallion:** `RAW` / `STAGING` / `MART`
 - **Chargement `RAW.YELLOW_TRIPS`:** 44.6M lignes (Parquet 2024-2025)
 - **Chargement `RAW.TAXI_ZONES`:** 265 zones
@@ -186,7 +186,7 @@ python ingestion/download_tlc.py
   - `04_load_taxi_zones.sql` — Zones (265 lignes)
   - `05_copy_yellow_trips.sql` — Chargement COPY INTO
 
-### Sprint 2 [TERMINE] Nettoyage, Qualité & Transformations SQL
+### Sprint 2 Nettoyage, Qualité & Transformations SQL
 - **Analyse qualité:** 86.1% de rétention (38.4M / 44.6M lignes)
 - **Création `STAGING.STG_TRIPS`:** 38.4M lignes propres et validées
 - **SCD Type 2 `STAGING.DIM_LOCATION`:** Démonstration JFK Airport
@@ -219,6 +219,17 @@ python ingestion/download_tlc.py
 - Structure YAML modernisée (1 fichier YAML par modèle)
 - Documentation automatique générée (`dbt docs generate`)
 - Data Lineage visualisé via `dbt docs serve`
+
+### Sprint 4 CI/CD & Automatisation (GitHub Actions)
+- Pipeline CI/CD opérationnel (déclenché à chaque push sur `main`)
+- Étapes : `dbt compile` -> `dbt test` -> `dbt run`
+- Performance : Pipeline exécuté en ~20s pour 38.4M lignes
+- Sécurisation : Identifiants Snowflake gérés via GitHub Secrets
+
+### Sprint 5 Monitoring & Observabilité 
+- [ ] Data Freshness (Surveillance de la fraîcheur des données via DBT)
+- [ ] Monitoring des performances Snowflake (Requêtes SQL sur `ACCOUNT_USAGE`)
+- [ ] Alertes automatiques en cas d'échec du pipeline
 ---
 
 ## Vérification du succès

@@ -69,3 +69,13 @@ Python 3.14 est une version très récente (encore en phase de développement/b�
 2. Supprimer l'ancien environnement virtuel : `Remove-Item -Recurse -Force .venv`
 3. Recréer l'environnement avec Python 3.12 : `py -3.12 -m venv .venv`
 4. Réinstaller les dépendances.
+
+## Problème 5 - Le bug de la double extension Windows
+**Symptôme** : Git détecte un fichier nommé `stg_yellow_trips.yml.yml` au lieu de `stg_yellow_trips.yml`.
+**Cause** : Windows masque souvent les extensions de fichiers connus. En renommant `schema.yml` en `stg_yellow_trips.yml` via l'explorateur, Windows a ajouté le `.yml` à la fin du nom complet.
+**Solution** : Utiliser Git pour forcer le renommage : `git mv stg_yellow_trips.yml.yml stg_yellow_trips.yml`. Toujours activer l'affichage des extensions de fichiers dans Windows.
+
+## Problème 6 - DBT Custom Schemas (`PUBLIC_mart` au lieu de `MART`)
+**Symptôme** : DBT crée les tables dans un schéma nommé `PUBLIC_mart` au lieu de simplement `MART`.
+**Cause** : DBT combine par défaut le schéma cible du `profiles.yml` (`PUBLIC`) avec le suffixe défini dans `dbt_project.yml` (`_mart`).
+**Solution** : C'est le comportement natif ("Custom Schemas") de DBT. Pour un projet de formation, c'est parfaitement acceptable. Pour la production, on configure les schémas cibles de manière explicite dans le `profiles.yml` ou via des variables d'environnement.

@@ -297,4 +297,11 @@ jobs:
 - [Documentation officielle dbt](https://docs.getdbt.com/)
 - [Article de référence : dbt + Snowflake](https://dipikajiandani.medium.com/dbt-snowflake-2831681b67f9)
 - [Snowflake Documentation](https://docs.snowflake.com/)
+
+
+## Intégration CI/CD (Sprint 4)
+Tous ces modèles sont désormais déployés automatiquement via GitHub Actions.
+- **Fichier de config** : `.github/workflows/dbt_ci.yml`
+- **Fonctionnement** : À chaque push sur la branche `main`, GitHub lance `dbt compile`, `dbt test` et `dbt run` sur un runner Ubuntu.
+- **Résultat** : Les tables `PUBLIC_MART` sont rafraîchies sans intervention manuelle en moins de 25 secondes.
 ```
