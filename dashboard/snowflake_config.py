@@ -40,4 +40,4 @@ def execute_query(query):
         df = pd.read_sql(query, conn)
         return df
     finally:
-        conn.close()
+        conn.close() 

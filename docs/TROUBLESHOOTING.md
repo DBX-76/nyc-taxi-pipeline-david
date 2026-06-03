@@ -95,3 +95,63 @@ Python 3.14 est une version très récente (encore en phase de développement/b�
 **Cause** : Le dashboard chargeait toutes les lignes de la table `KPI_MONTHLY` (38.4M lignes) au lieu des données agrégées (~13 lignes).
 **Solution** : Déplacer les agrégations côté Snowflake (pushdown SQL) plutôt que de charger les données brutes en mémoire Python. Utiliser `GROUP BY` dans les requêtes SQL au lieu de `SELECT *`.
 
+
+## Problème 10 - Port 3000 déjà alloué pour Grafana
+
+**Symptôme**  
+```
+Error response from daemon: failed to set up container networking: driver failed programming external connectivity on endpoint nyc_taxi_grafana: Bind for 0.0.0.0:3000 failed: port is already allocated
+```
+
+**Cause**  
+Le port 3000 est déjà utilisé par un autre service sur la machine (Node.js, React, un autre conteneur Docker, ou une précédente instance de Grafana).
+
+**Solution**  
+
+1. **Modifier le port dans `docker-compose.yml`**  
+   Changez la mapping de port pour utiliser un port différent :
+   ```yaml
+   ports:
+     - "3001:3000"  # Utiliser le port 3001 au lieu de 3000
+   ```
+2. **Relancer le conteneur**  
+   ```bash
+   docker compose up -d
+   ```
+3. **Accéder à Grafana**  
+   Ouvrez `http://localhost:3001` dans votre navigateur.
+
+**Alternative : Libérer le port 3000**  
+
+Trouvez et arrêtez le processus qui utilise le port 3000 :
+
+```powershell
+# Windows : trouver le processus utilisant le port 3000
+netstat -ano | findstr :3000
+
+# Tuer le processus (remplacez <PID> par le numéro trouvé)
+taskkill /PID <PID> /F
+```
+Voici une version restructurée et corrigée de votre marque d'arme, avec un ton plus professionnel et une mise en forme claire pour une présentation ou un rapport.
+
+***
+
+### Problème 11 : Restriction de licence du plugin Snowflake pour Grafana
+
+**Symptôme**
+Impossibilité d'utiliser le connecteur natif Snowflake sur une instance Grafana open-source auto-hébergée.
+
+**Cause racine**
+Depuis 2024, le plugin officiel Snowflake pour Grafana est passé sous licence **Enterprise (payante)**. Il n'est plus disponible pour les versions open-source standards, bloquant ainsi l'intégration directe sans achat de licence.
+
+**Solutions de contournement identifiées**
+1.  **Grafana Cloud (Recommandé)** : Profiter de l'essai gratuit de 14 jours incluant tous les plugins Enterprise. Permet un déploiement rapide et le partage public du dashboard.
+2.  **Driver ODBC générique** : Contourner le plugin officiel en utilisant un driver ODBC Snowflake couplé au plugin de données générique de Grafana (configuration complexe).
+3.  **Alternative Python (Streamlit)** : Abandonner Grafana pour développer un dashboard de monitoring sur mesure en Python pur avec Streamlit.
+
+**Décision stratégique pour le projet**
+Adoption de **Grafana Cloud** via l'offre d'essai gratuit.
+*Justification* : Cette option garantit l'accès immédiat à tous les plugins Enterprise sans friction technique et permet de générer un lien public sécurisé pour la présentation devant le jury.
+
+**Leçon retenue**
+La viabilité d'une stack technique ne doit jamais être présumée acquise. Il est impératif de **vérifier systématiquement les conditions de licence des plugins et dépendances** avant l'architecture finale. Une solution open-source peut devenir payante du jour au lendemain, menaçant la continuité du projet.
