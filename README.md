@@ -1,5 +1,7 @@
 # NYC Taxi Project
 
+[![DBT CI/CD Pipeline](https://github.com/DBX-76/nyc-taxi-pipeline-david/actions/workflows/dbt_ci.yml/badge.svg)](https://github.com/DBX-76/nyc-taxi-pipeline-david/actions/workflows/dbt_ci.yml)
+
 Projet d'ingestion, stockage et analyse des données Yellow Taxi de New York City (2024-2025) dans Snowflake.
 
 ## Vue d'ensemble
