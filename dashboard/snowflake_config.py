@@ -2,27 +2,26 @@ import os
 import snowflake.connector
 from pathlib import Path
 
-# Détection de l'environnement (Local ou Streamlit Cloud)
 try:
     import streamlit as st
     HAS_STREAMLIT = True
 except ImportError:
     HAS_STREAMLIT = False
 
-# Charger le fichier .env UNIQUEMENT en local
-if not HAS_STREAMLIT:
-    from dotenv import load_dotenv
-    env_path = Path(__file__).parent.parent / '.env'
-    load_dotenv(dotenv_path=env_path)
-
 def get_secret(key):
     """Récupère un secret : priorité à Streamlit Cloud, sinon variables d'environnement locales"""
     if HAS_STREAMLIT:
-        val = st.secrets.get(key)
-        if val is None:
-            st.error(f"Erreur de configuration : Le secret '{key}' est manquant dans les paramètres Streamlit Cloud.")
-            st.stop() # Arrête l'app proprement au lieu de planter
-        return val
+        # DÉBOGAGE : Si la clé n'est pas trouvée, on affiche les clés disponibles
+        if key not in st.secrets:
+            st.error(f" ERREUR CRITIQUE : La clé '{key}' est introuvable dans les secrets Streamlit.")
+            st.write("**Clés actuellement reconnues par Streamlit :**", list(st.secrets.keys()))
+            st.stop() # Arrête l'app pour éviter le crash Snowflake
+        return st.secrets[key]
+    
+    # Fallback pour le local (.env)
+    from dotenv import load_dotenv
+    env_path = Path(__file__).parent.parent / '.env'
+    load_dotenv(dotenv_path=env_path)
     return os.getenv(key)
 
 def get_snowflake_connection():
@@ -44,4 +43,4 @@ def execute_query(query):
         df = pd.read_sql(query, conn)
         return df
     finally:
-        conn.close() 
+        conn.close()
