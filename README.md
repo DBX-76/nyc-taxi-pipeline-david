@@ -227,9 +227,11 @@ python ingestion/download_tlc.py
 - Sécurisation : Identifiants Snowflake gérés via GitHub Secrets
 
 ### Sprint 5 Monitoring & Observabilité 
-- [ ] Data Freshness (Surveillance de la fraîcheur des données via DBT)
-- [ ] Monitoring des performances Snowflake (Requêtes SQL sur `ACCOUNT_USAGE`)
-- [ ] Alertes automatiques en cas d'échec du pipeline
+- Data Freshness : Surveillance de la fraîcheur des données via `dbt source freshness`
+- Monitoring des performances Snowflake (Requêtes sur `ACCOUNT_USAGE` et `INFORMATION_SCHEMA`)
+- Gestion fine des tables statiques vs dynamiques dans les tests de fraîcheur
+- Détection des requêtes lentes et estimation du stockage
+
 ---
 
 ## Vérification du succès

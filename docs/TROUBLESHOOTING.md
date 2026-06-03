@@ -79,3 +79,8 @@ Python 3.14 est une version très récente (encore en phase de développement/b�
 **Symptôme** : DBT crée les tables dans un schéma nommé `PUBLIC_mart` au lieu de simplement `MART`.
 **Cause** : DBT combine par défaut le schéma cible du `profiles.yml` (`PUBLIC`) avec le suffixe défini dans `dbt_project.yml` (`_mart`).
 **Solution** : C'est le comportement natif ("Custom Schemas") de DBT. Pour un projet de formation, c'est parfaitement acceptable. Pour la production, on configure les schémas cibles de manière explicite dans le `profiles.yml` ou via des variables d'environnement.
+
+## Problème 7 - Erreur de fraîcheur sur une table statique (TAXI_ZONES)
+**Symptôme** : La commande `dbt source freshness` échoue avec l'erreur `invalid identifier 'TPEP_PICKUP_DATETIME'`.
+**Cause** : Les règles de `freshness` et `loaded_at_field` avaient été définies au niveau de la source globale (`raw_nyc_taxi`). dbt a donc tenté de chercher la colonne `tpep_pickup_datetime` dans TOUTES les tables de la source, y compris `TAXI_ZONES` qui est une table de référence statique.
+**Solution** : Retirer les règles du niveau "source" et les appliquer uniquement au niveau de la table dynamique `YELLOW_TRIPS` dans le fichier `src_nyc_taxi.yml`. Les tables statiques (lookup) ne doivent jamais avoir de contrôle de fraîcheur.
