@@ -8,5 +8,12 @@ sources:
     tables:
       - name: YELLOW_TRIPS
         description: "Trajets Yellow Taxi 2024-2025"
+        # La fraîcheur ne s'applique qu'à cette table dynamique
+        loaded_at_field: tpep_pickup_datetime
+        freshness:
+          warn_after: {count: 30, period: day}
+          error_after: {count: 90, period: day}
+          
       - name: TAXI_ZONES
-        description: "Table de référence des zones de taxi (265 zones)"
+        description: "Table de référence statique (265 zones). Pas de contrôle de fraîcheur."
+    
