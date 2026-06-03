@@ -11,18 +11,16 @@ except ImportError:
 def get_secret(key):
     """Récupère un secret : priorité à Streamlit Cloud, sinon variables d'environnement locales"""
     if HAS_STREAMLIT:
-        # DÉBOGAGE : Si la clé n'est pas trouvée, on affiche les clés disponibles
         if key not in st.secrets:
-            st.error(f" ERREUR CRITIQUE : La clé '{key}' est introuvable dans les secrets Streamlit.")
-            st.write("**Clés actuellement reconnues par Streamlit :**", list(st.secrets.keys()))
-            st.stop() # Arrête l'app pour éviter le crash Snowflake
+            st.error(f"Erreur de configuration : La clé '{key}' est manquante dans les secrets Streamlit Cloud.")
+            st.stop()
         return st.secrets[key]
     
     # Fallback pour le local (.env)
     from dotenv import load_dotenv
     env_path = Path(__file__).parent.parent / '.env'
     load_dotenv(dotenv_path=env_path)
-    return os.getenv(key)
+    return os.getenv(key) 
 
 def get_snowflake_connection():
     """Établit une connexion à Snowflake de manière sécurisée"""
