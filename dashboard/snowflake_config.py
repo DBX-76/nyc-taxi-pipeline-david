@@ -18,7 +18,11 @@ if not HAS_STREAMLIT:
 def get_secret(key):
     """Récupère un secret : priorité à Streamlit Cloud, sinon variables d'environnement locales"""
     if HAS_STREAMLIT:
-        return st.secrets.get(key)
+        val = st.secrets.get(key)
+        if val is None:
+            st.error(f"Erreur de configuration : Le secret '{key}' est manquant dans les paramètres Streamlit Cloud.")
+            st.stop() # Arrête l'app proprement au lieu de planter
+        return val
     return os.getenv(key)
 
 def get_snowflake_connection():
