@@ -2,7 +2,7 @@
 
 [![DBT CI/CD Pipeline](https://github.com/DBX-76/nyc-taxi-pipeline-david/actions/workflows/dbt_ci.yml/badge.svg)](https://github.com/DBX-76/nyc-taxi-pipeline-david/actions/workflows/dbt_ci.yml)
 
-Projet d'ingestion, stockage et analyse des données Yellow Taxi de New York City (2024-2025) dans Snowflake.
+Projet d'ingestion, stockage et analyse des données Yellow Taxi de New York City dans Snowflake.
 
 ## Vue d'ensemble
 
@@ -15,71 +15,6 @@ Ce projet automatise l'ingestion complète des données Yellow Taxi du TLC (Taxi
 
 ---
 
-## Architecture du Pipeline
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                          TLC NYC Taxi Data Pipeline                         │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-SPRINT 1 — INGESTION & ARCHITECTURE SNOWFLAKE
-┌──────────────────────────────────────────────────────────────────────────────┐
-│
-│  TLC CDN (Parquet 2024-2025)
-│         ↓
-│  Python Script (download_tlc.py)
-│    • Télécharge mois par mois
-│    • Stockage local data/raw/
-│    • Upload vers Snowflake Stage
-│    • COPY INTO RAW.YELLOW_TRIPS
-│         ↓
-│  Snowflake RAW Schema (44.6M lignes)
-│    ├── RAW.YELLOW_TRIPS (44.6M trajets)
-│    └── RAW.TAXI_ZONES (265 zones)
-│
-└──────────────────────────────────────────────────────────────────────────────┘
-
-SPRINT 2 — NETTOYAGE, QUALITÉ & TRANSFORMATIONS
-┌──────────────────────────────────────────────────────────────────────────────┐
-│
-│  Analyse Qualité (06_data_quality_analysis.sql)
-│    • 86.1% de rétention (38.4M / 44.6M)
-│    • Exclusion données corrompues, NULL, durées aberrantes
-│         ↓
-│  STAGING Schema (38.4M lignes propres)
-│    ├── STG_TRIPS (38.4M trajets validés)
-│    ├── DIM_LOCATION (SCD Type 2)
-│    └── (Tables intermédiaires)
-│         ↓
-│  MART Schema (Tables KPIs d'analyse)
-│    ├── KPI_MONTHLY (agrégations mensuelles)
-│    ├── KPI_HOURLY (agrégations horaires)
-│    ├── KPI_BY_ZONE (analyses par zone)
-│    └── KPI_BY_PAYMENT (analyses par paiement)
-│
-│  Documentation Complète
-│    ├── RAPPORT_QUALITE.md (détails anomalies)
-│    ├── CONVENTIONS.md (standards)
-│    ├── TROUBLESHOOTING.md (solutions)
-│    └── erd_snowflake.png (schéma)
-│
-└──────────────────────────────────────────────────────────────────────────────┘
-
-SPRINT 3 [EN COURS] — DBT CORE (EN COURS)
-┌──────────────────────────────────────────────────────────────────────────────┐
-│
-│  dbt Project
-│    ├── Models (staging, marts)
-│    ├── Tests qualité automatisés
-│    ├── Documentation dbt
-│    ├── Sources + Seeds
-│    └── Lineage complet
-│
-└──────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
 ## Structure du projet
 
 ```
@@ -87,7 +22,7 @@ nyc-taxi-project/
 ├── README.md                    ← Vue d'ensemble (ce fichier)
 ├── .env                         ← Credentials Snowflake (à configurer)
 ├── .gitignore                   ← Fichiers à ignorer
-├── .venv/                       ← Environnement Python virtuel
+├── requirements.txt             ← Dépendances Python
 │
 ├── ingestion/
 │   └── download_tlc.py          ← Script principal d'ingestion
@@ -103,26 +38,58 @@ nyc-taxi-project/
 │   ├── 08_create_mart_kpis.sql            ← Tables KPIs
 │   ├── 09a_create_dim_location.sql        ← Dimension location
 │   ├── 09b_insert_dim_location.sql        ← Population dimension
-│   └── 09c_scd_type2_simulation.sql       ← SCD Type 2 démo
+│   ├── 09c_scd_type2_simulation.sql       ← SCD Type 2 démo
+│   ├── 10_create_dbt_role.sql             ← Rôle DBT dédié
+│   └── 11_monitoring_snowflake.sql        ← Monitoring Snowflake
 │
 ├── data/
 │   └── raw/                     ← Fichiers Parquet téléchargés
 │
-└── docs/
-    ├── CONVENTIONS.md           ← Standards SQL/Python
-    ├── TROUBLESHOOTING.md       ← Résolution de problèmes
-    ├── RAPPORT_QUALITE.md       ← Analyse qualité des données
-    └── erd_snowflake.png        ← Schéma ERD
+├── docs/
+│   ├── CONVENTIONS.md           ← Standards SQL/Python
+│   ├── TROUBLESHOOTING.md       ← Résolution de problèmes
+│   ├── RAPPORT_QUALITE.md       ← Analyse qualité des données
+│   ├── DASHBOARD.md             ← Documentation Streamlit
+│   ├── MONITORING.md            ← Monitoring & Observabilité
+│   ├── DBT_STRUCTURE.md         ← Structure DBT
+│   ├── ARCHITECTURE.md          ← Architecture Snowflake & Medallion
+│   ├── DATA_FLOW.md             ← Flux de données du pipeline
+│   ├── SQL_TRANSFORMATIONS.md   ← Scripts SQL de transformation
+│   └── erd_snowflake.png        ← Schéma ERD
+│
+├── nyc_taxi_dbt/                ← Projet DBT Core
+│   ├── dbt_project.yml          ← Configuration DBT
+│   ├── models/
+│   │   ├── staging/
+│   │   │   ├── stg_yellow_trips.sql      ← Vue staging nettoyée
+│   │   │   └── stg_yellow_trips.yml      ← Tests de qualité
+│   │   └── marts/
+│   │       ├── kpi_monthly.sql           ← KPI mensuels
+│   │       ├── kpi_hourly.sql            ← KPI horaires
+│   │       ├── kpi_zones.sql             ← KPI par zones
+│   │       └── kpi_payment.sql           ← KPI par paiement
+│   ├── seeds/, snapshots/, macros/       ← DBT components
+│   └── .gitignore                       ← Ignore DBT artifacts
+│
+├── dashboard/                   ← Dashboard Streamlit
+│   ├── app.py                 ← Application Streamlit
+│   ├── snowflake_config.py    ← Configuration Snowflake
+│   └── requirements.txt       ← Dépendances dashboard
+│
+└── monitoring/                  ← Monitoring & Grafana
+    ├── docker-compose.yml       ← Docker Grafana (archive)
+    └── dashboards/
+        └── nyc_taxi_monitoring.json  ← Dashboard JSON
 ```
 
----
+
 
 ## Démarrage rapide
 
 ### 1. Configuration
 
 **Prérequis:**
-- Python 3.8+
+- Python 3.12
 - Snowflake Account + Credentials
 - Connexion internet
 
@@ -132,7 +99,7 @@ nyc-taxi-project/
 git clone <repo-url>
 cd nyc-taxi-project
 
-# Créer l'environnement virtuel (si pas encore fait)
+# Créer l'environnement virtuel
 python -m venv .venv
 
 # Activer l'environnement
@@ -158,22 +125,12 @@ SNOWFLAKE_ROLE=ACCOUNTADMIN
 
 **PowerShell (Windows):**
 ```powershell
-# Activer l'environnement (si pas déjà fait)
-.venv\Scripts\Activate.ps1
-
 # Lancer le script
 python ingestion/download_tlc.py
 ```
 
-**Bash (Linux/Mac):**
-```bash
-source .venv/bin/activate
-python ingestion/download_tlc.py
-```
 
----
-
-## État du projet
+## Sprints du projet
 
 ### Sprint 1 Ingestion & Architecture Snowflake
 - **Architecture medallion:** `RAW` / `STAGING` / `MART`
@@ -249,9 +206,9 @@ python ingestion/download_tlc.py
 - Dashboard de monitoring avec 4 panneaux : fraîcheur, volume, performance, stockage
 - Détection automatique de la fraîcheur (437 jours sans nouvelles données)
 - Export JSON du dashboard pour Infrastructure as Code
----
 
-## Vérification du succès
+
+## Vérification 
 
 ### Fichiers téléchargés localement:
 ```powershell
@@ -281,13 +238,25 @@ SELECT * FROM RAW.YELLOW_TRIPS LIMIT 5;
 LIST @RAW.NYC_TAXI_STAGE;
 ```
 
----
 
 ## Documentation
 
-- [Architecture détaillée](docs/ARCHITECTURE.md) *(À compléter)*
-- [Flux de données](docs/DATA_FLOW.md) *(À compléter)*
-- [Requêtes SQL](docs/SQL_TRANSFORMATIONS.md) *(À compléter)*
+### Architecture & Conception
+- [Architecture Snowflake & Medallion](docs/ARCHITECTURE.md)
+- [DBT Core Structure](docs/DBT_STRUCTURE.md) — Modèles, tests, bonnes pratiques
+- [Flux de données](docs/DATA_FLOW.md) — Ingestion → Staging → MART
+
+### Transformations & Qualité
+- [Requêtes SQL](docs/SQL_TRANSFORMATIONS.md) — Scripts de transformation
+- [Rapport qualité données](docs/RAPPORT_QUALITE.md) — Nettoyage et KPIs
+
+### Monitoring & Dashboard
+- [Dashboard Streamlit](docs/DASHBOARD.md) — Visualisations interactives
+- [Monitoring & Observabilité](docs/MONITORING.md) — Fraîcheur, performances, CI/CD
+
+### Références
+- [Conventions de code](docs/CONVENTIONS.md) — Standards SQL/Python/DBT
+- [Troubleshooting](docs/TROUBLESHOOTING.md) — Résolution de problèmes
 
 ---
 
@@ -301,90 +270,12 @@ Le script crée/utilise automatiquement:
 
 ---
 
-## Troubleshooting
-
-### Erreur: "snowflake.connector not found"
-```powershell
-pip install snowflake-connector-python
-```
-
-### Erreur: Credentials invalides
-- Vérifier le fichier `.env`
-- Vérifier les credentials Snowflake
-- S'assurer que le warehouse est actif
-
-### Erreur: Fichiers introuvables
-- Certains fichiers Yellow Taxi ne sont pas encore publiés
-- Le script affiche `[warn]` pour les fichiers manquants
-
----
-
-# Monitoring - NYC Taxi Pipeline
-
-## Contexte
-
-Ce dossier contient la configuration pour le monitoring du pipeline NYC Taxi.
-
-## Évolution technique
-
-### Phase 1 : Grafana Local avec Docker (Abandonné)
-- **Objectif** : Déployer Grafana en local via Docker Compose
-- **Fichiers** : `docker-compose.yml`
-- **Problème rencontré** : Le plugin officiel Snowflake (`grafana-snowflake-datasource`) est passé en licence Enterprise (payante) en 2024
-- **Décision** : Migration vers Grafana Cloud pour bénéficier de l'essai gratuit Enterprise (14 jours)
-
-### Phase 2 : Grafana Cloud (En cours)
-- **Objectif** : Utiliser Grafana Cloud pour le monitoring
-- **Avantages** :
-  - Accès à tous les plugins Enterprise (gratuit 14 jours)
-  - Lien partageable pour le jury
-  - Pas besoin de Docker sur la machine
-- **Dashboards** : Exportés en JSON et commités dans ce dossier (à venir)
-
-## Fichiers
-
-- `docker-compose.yml` : Configuration Docker pour Grafana local (archive)
-- `dashboards/` : Dashboards Grafana exportés en JSON (à venir)
-
-## Comment revenir à Docker ?
-
-Si Grafana Cloud n'est plus disponible ou si tu veux une solution 100% locale :
-
-```bash
-cd monitoring
-docker compose up -d
-# Accéder à http://localhost:3001
-
----
-## Dashboard de Monitoring
-
-### Fichier JSON
-- **Emplacement** : `dashboards/nyc_taxi_monitoring.json`
-- **Source** : Exporté depuis Grafana Cloud
-- **Format** : `apiVersion: dashboard.grafana.app/v2`
-
-### Panneaux configurés
-1. **Fraîcheur** : Jours depuis la dernière donnée (437 jours - alerte rouge)
-2. **Volume** : Total lignes STAGING (38,448,590)
-3. **Performance** : Courses par heure (pic à 18h)
-4. **Stockage** : Taille des tables par schéma
-
-### Importer ce dashboard
-1. Dans Grafana (Cloud ou local), aller dans **Dashboards → Import**
-2. Uploader `nyc_taxi_monitoring.json`
-3. Sélectionner la Data Source Snowflake
-4. Le dashboard est prêt !
-
-## Support
-
-Pour toute question, consultez:
-- La documentation Snowflake: [docs.snowflake.com](https://docs.snowflake.com)
-- Les données TLC: [www.nyc.gov/tlc](https://www.nyc.gov/tlc)
-
----
-
 ## Dernière mise à jour
 
-- **Date:** 1er Juin 2026
-- **État:** Phase 1 - Ingestion complète ✅
-- **Prochaine révision:** Lors de l'ajout des transformations
+- **Date:** 4 Juin 2026
+- **État:** Phase 7 - Dashboard + Monitoring ✅
+- **Documentation:** Tous les guides disponibles dans `docs/`
+
+
+
+
