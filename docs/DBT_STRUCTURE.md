@@ -1,8 +1,4 @@
-Voici le contenu complet et mis à jour du fichier `docs/DBT_STRUCTURE.md`. J'ai remplacé la section "Structure du projet" par votre nouvelle version qui inclut les fichiers de configuration YAML spécifiques (`stg_yellow_trips.yml`) et des commentaires plus précis, tout en conservant le reste du document intact.
 
-Vous pouvez copier-coller l'intégralité du bloc ci-dessous :
-
-```markdown
 # Architecture DBT - NYC Taxi Pipeline
 
 ## Vue d'ensemble
@@ -39,26 +35,26 @@ nyc_taxi_dbt/
 ```text
 ┌─────────────────────────────────────────────────────────────┐
 │  RAW (Snowflake)                                            │
-│  ├── RAW.YELLOW_TRIPS (44.6M lignes brutes)                │
-│  └── RAW.TAXI_ZONES (265 zones)                            │
+│  ├── RAW.YELLOW_TRIPS (44.6M lignes brutes)                 │
+│  └── RAW.TAXI_ZONES (265 zones)                             │
 └────────────────────┬────────────────────────────────────────┘
                      │ {{ source('raw_nyc_taxi', 'YELLOW_TRIPS') }}
                      ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  STAGING (Vue)                                              │
-│  └── stg_yellow_trips (38.4M lignes nettoyées)             │
-│      - Filtrage : passenger_count > 0, trip_distance > 0   │
-│      - Calculs : trip_duration_min, tip_percentage         │
-│      - Extraction : pickup_hour, pickup_month, pickup_year │
+│  └── stg_yellow_trips (38.4M lignes nettoyées)              │
+│      - Filtrage : passenger_count > 0, trip_distance > 0    │
+│      - Calculs : trip_duration_min, tip_percentage          │
+│      - Extraction : pickup_hour, pickup_month, pickup_year  │
 └────────────────────┬────────────────────────────────────────┘
                      │ {{ ref('stg_yellow_trips') }}
                      ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  MART (Tables)                                              │
-│  ├── kpi_monthly (13 mois : jan 2024 → jan 2025)           │
-│  ├── kpi_hourly (24 heures)                                │
-│  ├── kpi_zones (top 20 zones)                              │
-│  └── kpi_payment (5 types de paiement)                     │
+│  ├── kpi_monthly (13 mois : jan 2024 → jan 2025)            │
+│  ├── kpi_hourly (24 heures)                                 │
+│  ├── kpi_zones (top 20 zones)                               │
+│  └── kpi_payment (5 types de paiement)                      │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -242,55 +238,7 @@ dbt peut générer automatiquement un site web interactif qui documente :
 dbt docs generate  # Génère les fichiers dans target/
 dbt docs serve     # Lance un serveur web local (http://localhost:8080)
 
-## Intégration CI/CD (futur)
-
-Pipeline GitHub Actions prévu :
-
-```yaml
-on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
-
-jobs:
-  dbt:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
-      
-      - name: Install dbt
-        run: pip install dbt-core dbt-snowflake
-      
-      - name: dbt compile (PR)
-        if: github.event_name == 'pull_request'
-        run: dbt compile
-      
-      - name: dbt test (PR)
-        if: github.event_name == 'pull_request'
-        run: dbt test
-      
-      - name: dbt run (main)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: dbt run
 ```
-
-**Flux** :
-- **Pull Request** : `dbt compile` + `dbt test` (validation sans déploiement)
-- **Merge vers main** : `dbt run` (déploiement en production)
-
-## Compétences validées
-
-- **C11** : Architecture Snowflake (warehouse, database, schemas)
-- **C13** : Modélisation en étoile (dimensions + faits)
-- **C14** : Transformation SQL avancée (CTE, window functions)
-- **C15** : Pipeline ETL automatisé (Python + dbt)
-- **C17** : Qualité des données (tests dbt, SCD Type 2)
 
 ## Ressources
 
@@ -299,9 +247,3 @@ jobs:
 - [Snowflake Documentation](https://docs.snowflake.com/)
 
 
-## Intégration CI/CD (Sprint 4)
-Tous ces modèles sont désormais déployés automatiquement via GitHub Actions.
-- **Fichier de config** : `.github/workflows/dbt_ci.yml`
-- **Fonctionnement** : À chaque push sur la branche `main`, GitHub lance `dbt compile`, `dbt test` et `dbt run` sur un runner Ubuntu.
-- **Résultat** : Les tables `PUBLIC_MART` sont rafraîchies sans intervention manuelle en moins de 25 secondes.
-```

@@ -78,9 +78,3 @@ Données propres couvrant 13 mois : jan 2024 → jan 2025.
 
 **Intérêt métier** :
 Permet de rejouer les analyses historiques avec la dimension telle qu'elle était à une date donnée (ex: KPIs par zone avant/après changement de borough).
-
-## Anomalie supplémentaire détectée post-staging
-
-Février et mars 2025 : 2 lignes chacun avec des durées aberrantes
-(ex: 82 minutes pour 2,45 km). Supprimées de STAGING.
-Volume final STG_TRIPS après nettoyage complet : à recalculer.

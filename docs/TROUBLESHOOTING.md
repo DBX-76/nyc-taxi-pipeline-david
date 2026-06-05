@@ -15,14 +15,6 @@ TIMESTAMP standard.
 Utiliser `TO_TIMESTAMP(valeur::NUMBER, 6)` dans le COPY INTO 
 au lieu du cast direct `::TIMESTAMP_NTZ`.
 
-**Leçon**  
-Toujours inspecter les valeurs brutes depuis le stage avant 
-le chargement :
-```sql
-SELECT $1:tpep_pickup_datetime 
-FROM @RAW.NYC_TAXI_STAGE/yellow_tripdata_2024-01.parquet
-LIMIT 5;
-```
 
 ## Problème 2 — COPY INTO refuse de recharger les fichiers
 
@@ -134,7 +126,7 @@ taskkill /PID <PID> /F
 ```
 Voici une version restructurée et corrigée de votre marque d'arme, avec un ton plus professionnel et une mise en forme claire pour une présentation ou un rapport.
 
-***
+
 
 ### Problème 11 : Restriction de licence du plugin Snowflake pour Grafana
 
@@ -144,14 +136,8 @@ Impossibilité d'utiliser le connecteur natif Snowflake sur une instance Grafana
 **Cause racine**
 Depuis 2024, le plugin officiel Snowflake pour Grafana est passé sous licence **Enterprise (payante)**. Il n'est plus disponible pour les versions open-source standards, bloquant ainsi l'intégration directe sans achat de licence.
 
-**Solutions de contournement identifiées**
-1.  **Grafana Cloud (Recommandé)** : Profiter de l'essai gratuit de 14 jours incluant tous les plugins Enterprise. Permet un déploiement rapide et le partage public du dashboard.
-2.  **Driver ODBC générique** : Contourner le plugin officiel en utilisant un driver ODBC Snowflake couplé au plugin de données générique de Grafana (configuration complexe).
-3.  **Alternative Python (Streamlit)** : Abandonner Grafana pour développer un dashboard de monitoring sur mesure en Python pur avec Streamlit.
+**Solution** 
 
-**Décision stratégique pour le projet**
-Adoption de **Grafana Cloud** via l'offre d'essai gratuit.
-*Justification* : Cette option garantit l'accès immédiat à tous les plugins Enterprise sans friction technique et permet de générer un lien public sécurisé pour la présentation devant le jury.
+Grafana Cloud, essai gratuit de 14 jours incluant tous les plugins Enterprise avec un déploiement rapide et le partage public du dashboard.
 
-**Leçon retenue**
-La viabilité d'une stack technique ne doit jamais être présumée acquise. Il est impératif de **vérifier systématiquement les conditions de licence des plugins et dépendances** avant l'architecture finale. Une solution open-source peut devenir payante du jour au lendemain, menaçant la continuité du projet.
+

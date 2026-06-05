@@ -1,19 +1,21 @@
-# Stratégie de Monitoring & Observabilité (Sprint 5)
+ # Monitoring - NYC Taxi Pipeline
 
-Pour garantir la fiabilité du pipeline en production, 3 niveaux de monitoring ont été mis en place :
 
-## 1. Data Freshness (Fraîcheur des données)
-Utilisation de la fonctionnalité native de dbt (`dbt source freshness`).
-- **Cible** : Table `RAW.YELLOW_TRIPS`
-- **Seuils** : Warning à 30 jours, Error à 90 jours.
-- **Résultat** : Le système détecte correctement l'absence de nouvelles données (Status: `ERROR STALE`), ce qui déclencherait une alerte en production.
+### Phase 1 : Grafana Local avec Docker (Abandonné)
+- **Objectif** : Déployer Grafana en local via Docker Compose
+- **Fichiers** : `docker-compose.yml`
+- **Problème rencontré** : Le plugin officiel Snowflake (`grafana-snowflake-datasource`) est passé en licence Enterprise (payante) en 2024
+- **Décision** : Migration vers Grafana Cloud pour bénéficier de l'essai gratuit Enterprise (14 jours)
 
-## 2. Monitoring des performances Snowflake
-Requêtes SQL sur le dictionnaire de données `SNOWFLAKE.ACCOUNT_USAGE` et `INFORMATION_SCHEMA` (fichier `sql/11_monitoring_snowflake.sql`).
-- **Temps d'exécution** : Surveillance de la durée des `CREATE_TABLE_AS_SELECT` (actuellement ~12s pour 38M de lignes).
-- **Stockage** : Suivi de la taille des tables (RAW = 1 Go, MART = 931 Mo).
-- **Requêtes lentes** : Identification des requêtes > 5 secondes pour optimisation future.
+### Phase 2 : Grafana Cloud 
+- **Objectif** : Utiliser Grafana Cloud pour le monitoring
+- **Avantages** :
+  - Accès à tous les plugins Enterprise (gratuit 14 jours)
+  - Lien partageable pour le jury
+  - Pas besoin de Docker sur la machine
+- **Dashboards** : Exportés en JSON et commités dans ce dossier (à venir)
 
-## 3. CI/CD Monitoring (GitHub Actions)
-- Historique complet des exécutions disponible dans l'onglet "Actions" de GitHub.
-- Temps total du pipeline : ~20 secondes.
+## Fichiers
+
+- `docker-compose.yml` : Configuration Docker pour Grafana local (archive)
+- `dashboards/` : Dashboards Grafana exportés en JSON

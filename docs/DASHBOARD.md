@@ -1,6 +1,5 @@
-Voici votre documentation consolidée et formatée en un seul fichier Markdown structuré et professionnel.
 
-```markdown
+
 # Dashboard Streamlit - Pipeline NYC Taxi
 
 ## Vue d'ensemble
@@ -59,4 +58,3 @@ Les identifiants Snowflake ne sont **jamais** présents dans le code source :
    ```
 
 Le dashboard s'ouvre automatiquement sur [http://localhost:8501](http://localhost:8501).
-```

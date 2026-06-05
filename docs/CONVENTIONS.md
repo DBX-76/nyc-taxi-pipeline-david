@@ -31,11 +31,5 @@
 - Noms de fichiers en snake_case : `stg_yellow_trips.sql`, `kpi_monthly.sql`
 - Tests de qualité dans `schema.yml` (not_null, unique, relationships)
 
-### Commandes principales
-```bash
-dbt run          # Exécute tous les modèles
-dbt test         # Lance les tests de qualité
-dbt docs generate # Génère la documentation
-dbt docs serve   # Sert la documentation localement
 
 
